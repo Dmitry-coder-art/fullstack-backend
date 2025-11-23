@@ -7,11 +7,7 @@ const app = express();
 const port = 3000;
 const secretKey = "mySecretKey123";
 
-app.use(cors());
-app.use(cors({
-  origin: '*',  // Разрешить всем (для dev; в prod — твой frontend URL)
-  credentials: true
-}));
+app.use(cors({ origin: '*' }));  // CORS
 app.use(express.json());
 
 const db = new Database("users.db");
