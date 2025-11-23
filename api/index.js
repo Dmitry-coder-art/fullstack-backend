@@ -5,9 +5,9 @@ const jwt = require("jsonwebtoken");
 
 const app = express();
 const port = 3000;
-const secretKey = "mySecretKey123";  // Ключ для JWT
+const secretKey = "mySecretKey123";
 
-app.use(cors());  // CORS для React
+app.use(cors());
 app.use(express.json());
 
 const db = new Database("users.db");
@@ -34,7 +34,7 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// /login (POST)
+// /login
 app.post("/login", (req, res) => {
   const { login, password } = req.body;
   if (login === "admin" && password === "123") {
@@ -45,14 +45,14 @@ app.post("/login", (req, res) => {
   }
 });
 
-// Защищённый /all (GET)
+// /all (защищённый)
 app.get("/all", authenticateToken, (req, res) => {
   const rows = db.prepare("SELECT * FROM users").all();
   res.json(rows);
 });
 
-// /save (POST, без защиты для простоты)
-app.post("/save", (req, res) => {
+// /save (защищённый)
+app.post("/save", authenticateToken, (req, res) => {
   const { name, age, hobby, email } = req.body;
   if (!name || age < 18) return res.status(400).json({ error: "Ошибка валидации!" });
   try {
